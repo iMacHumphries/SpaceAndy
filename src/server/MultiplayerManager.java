@@ -67,6 +67,7 @@ public class MultiplayerManager implements ClientListener, PlayerListener {
 				entityManager.addEntity(new Laser(shootPacket.getUsername(), shootPacket.getDirX(), shootPacket.getDirY(), shootPacket.getX(), shootPacket.getY(), shootPacket.getRotZ()));
 				break;
 			case KILL:
+				AudioManager.playClip("boom.wav");
 				Packet04Kill killPacket = (Packet04Kill) packet;
 				entityManager.removePlayerBot(new PlayerBot(killPacket.getUsername()));
 				if (killPacket.getUsername().equalsIgnoreCase(player.getName()))

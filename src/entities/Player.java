@@ -5,6 +5,7 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.Sound;
 
 public class Player extends Entity {
 
@@ -13,7 +14,7 @@ public class Player extends Entity {
 	private float maxTurnSpeed;
 	private float currentTurnSpeed;
 	private String name;
-
+	
 	private PlayerListener delegate;
 
 	public interface PlayerListener {
@@ -27,7 +28,7 @@ public class Player extends Entity {
 		maxTurnSpeed = 0.25f;
 		currentSpeed = 0;
 		currentTurnSpeed = 0;
-		setImage("blueShip.png");
+		setImage("apple.png");
 		x = 500;
 		y = 50;
 	}
@@ -69,8 +70,9 @@ public class Player extends Entity {
 
 	public void checkInput(Input input, boolean isTyping) {
 		currentTurnSpeed = 0;
-		if (!isTyping && (input.isKeyDown(Input.KEY_W)
-				|| input.isKeyDown(Input.KEY_UP))) {
+		if (!isTyping
+				&& (input.isKeyDown(Input.KEY_W) || input
+						.isKeyDown(Input.KEY_UP))) {
 			if (currentSpeed < maxSpeed)
 				currentSpeed += 0.01f;
 		} else if (currentSpeed > 0)
@@ -96,7 +98,7 @@ public class Player extends Entity {
 		image.setCenterOfRotation(width / 2, height / 2);
 		image.setRotation(rotz + 90);
 
-		image.draw(x, y, scale, Color.green);
+		image.draw(x, y, scale);
 		g.drawString(name, x - width / 2, y - height);
 	}
 

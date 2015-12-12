@@ -53,8 +53,8 @@ public class SpaceGame extends BasicGameState {
 			throws SlickException {
 
 		background.draw(0, 0, gc.getWidth(), gc.getHeight());
-		player.render(gc, g);
 		entityManager.render(gc, g);
+		player.render(gc, g);
 		g.drawString(Constants.VERSION, 80, 10);
 
 		chatBox.setHighLighted(isTyping);

@@ -30,6 +30,15 @@ public class AudioManager {
 		}
 	}
 	
+	public static void playAt(String filename, int x, int y, int z) {
+		try {
+			Sound sound = new Sound("res/" + filename);
+			sound.playAt(x, y, z);
+		} catch (SlickException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public static void playLoop(String filename) {
 		try {
 			Sound sound = new Sound("res/" + filename);
