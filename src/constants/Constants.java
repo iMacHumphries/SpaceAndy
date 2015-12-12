@@ -24,6 +24,7 @@ public class Constants {
 	
 	public static final int SERVER_MENU_STATE = 0;
 	public static final int SPACE_GAME_STATE = 1;
+	public static final int KICKED_GAME_STATE = 2;
 	
 	
 }

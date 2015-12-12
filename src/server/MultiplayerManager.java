@@ -3,6 +3,8 @@ package server;
 import java.util.LinkedList;
 import java.util.Queue;
 
+import menu.KickedScreen;
+
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
@@ -14,6 +16,7 @@ import entities.Player;
 import entities.Player.PlayerListener;
 import entities.PlayerBot;
 import server.packets.*;
+import sound.AudioManager;
 import util.ChatBox;
 
 public class MultiplayerManager implements ClientListener, PlayerListener {
@@ -32,8 +35,8 @@ public class MultiplayerManager implements ClientListener, PlayerListener {
 	}
 	
 	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
-		if (hasPackets()) {
-			Packet packet = popPacket();
+		if (!packetQueue.isEmpty()) {
+			Packet packet = packetQueue.poll();
 			
 			switch (packet.getType()) {
 			case INVALID:
@@ -60,6 +63,7 @@ public class MultiplayerManager implements ClientListener, PlayerListener {
 				break;
 			case SHOOT:
 				Packet03Shoot shootPacket = (Packet03Shoot) packet;
+				AudioManager.playClipRandomPitch("shot1.wav");
 				entityManager.addEntity(new Laser(shootPacket.getUsername(), shootPacket.getDirX(), shootPacket.getDirY(), shootPacket.getX(), shootPacket.getY(), shootPacket.getRotZ()));
 				break;
 			case KILL:
@@ -75,40 +79,39 @@ public class MultiplayerManager implements ClientListener, PlayerListener {
 			case KICK:
 				Packet06Kick kickPacket = (Packet06Kick) packet;
 				if (kickPacket.getUsername().equalsIgnoreCase(player.getName())) {
-					sbg.enterState(Constants.SERVER_MENU_STATE);
+					KickedScreen kicked = (KickedScreen)sbg.getState(Constants.KICKED_GAME_STATE);
+					kicked.setMessage("You have been kicked for " + kickPacket.getReason());
+					sbg.enterState(Constants.KICKED_GAME_STATE);
 				}
+				break;
+			case STOP:
+				KickedScreen kicked = (KickedScreen)sbg.getState(Constants.KICKED_GAME_STATE);
+				kicked.setMessage("Server stopped.");
+				sbg.enterState(Constants.KICKED_GAME_STATE);
 				break;
 			}	
 		}
 	}
 	
-	public boolean hasPackets() {
-		return !packetQueue.isEmpty();
-	}
-	
-	public Packet popPacket() {
-		return packetQueue.remove();
-	}
-
 	public void login(Player player) {
 		this.player = player;
 		this.sendPacketToServer(new Packet01Login(player.getName(), (int)player.getX(), (int)player.getY(), (int)player.getRotz()));
 	}
 
 	public void disconnect(Player player) {
-		this.sendPacketToServer(new Packet00Disconnect(player.getName()));
+		sendPacketToServer(new Packet00Disconnect(player.getName()));
 	}
 	
 	public void shootLaser(Laser laser) {
-		this.sendPacketToServer(new Packet03Shoot(laser.getUsername(),laser.getX(), laser.getY(), laser.getDirX(), laser.getDirY(), laser.getRotz()));
+		sendPacketToServer(new Packet03Shoot(laser.getUsername(),laser.getX(), laser.getY(), laser.getDirX(), laser.getDirY(), laser.getRotz()));
 	}
 	
 	public void kill(String username) {
-		this.sendPacketToServer(new Packet04Kill(username));
+		sendPacketToServer(new Packet04Kill(username));
 	}
 	
 	public void sendMessage(Player player, String msg) {
-		this.sendPacketToServer(new Packet05Chat(player.getName(), msg));
+		sendPacketToServer(new Packet05Chat(player.getName(), msg));
 	}
 	
 	private void sendPacketToServer(Packet packet) {
@@ -117,7 +120,7 @@ public class MultiplayerManager implements ClientListener, PlayerListener {
 	
 	@Override
 	public void playerDidMove(Player player) {
-		this.sendPacketToServer(new Packet02Move(player.getName(), (int)player.getX(), (int)player.getY(), (int)player.getRotz()));
+		sendPacketToServer(new Packet02Move(player.getName(), (int)player.getX(), (int)player.getY(), (int)player.getRotz()));
 	}
 	
 	@Override

@@ -1,6 +1,4 @@
 /SpaceDriver.class
-/SpaceGame.class
-/SpaceGameController.class
 /blueLaser.png
 /blueShip.png
 /constants/
@@ -13,3 +11,7 @@
 /space.png
 /spritesheet.png
 /util/
+/sound/
+/shot1.wav
+/Notes
+/soothingSpaceLoop.wav

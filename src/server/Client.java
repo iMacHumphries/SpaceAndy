@@ -71,6 +71,9 @@ public class Client extends Thread {
 		case KICK:
 			delegate.clientDidReceivePacket(new Packet06Kick(data));
 			break;
+		case STOP:
+			delegate.clientDidReceivePacket(new Packet07Stop());
+			break;
 		}
 	}
 

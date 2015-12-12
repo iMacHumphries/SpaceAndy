@@ -22,6 +22,7 @@ import org.newdawn.slick.util.BufferedImageUtil;
 import constants.Constants;
 import entities.*;
 import server.MultiplayerManager;
+import sound.AudioManager;
 import util.ChatBox;
 
 /**
@@ -44,6 +45,7 @@ public class SpaceGame extends BasicGameState {
 	 * Constructor
 	 */
 	public SpaceGame() {
+		AudioManager.playLoop("soothingSpaceLoop.wav");
 	}
 
 	@Override

@@ -31,7 +31,7 @@ public class Button {
 		
 		g.setColor(color);
 		g.drawRect(x, y, width, height);
-		g.drawString(text, x, y);
+		g.drawString(text, x + width/2 - text.length()*5, y + height/2 - text.length()*2);
 		
 		g.setColor(temp);
 	}
@@ -111,7 +111,6 @@ public class Button {
 			if (this.containsPoint(gc.getInput().getMouseX(), gc.getInput()
 					.getMouseY())) {
 				color = highlightColor;
-				System.out.println("click");
 				delegate.actionPerformed(new ActionEvent(this,0,"command"));
 				new java.util.Timer().schedule( 
 				        new java.util.TimerTask() {
