@@ -54,7 +54,7 @@ public abstract class Entity {
 
 	public void setImage(String filename) {
 		try {
-			image = new Image("rez/" + filename);
+			image = new Image("res/" + filename);
 			width = image.getWidth();
 			height = image.getHeight();
 		} catch (SlickException e) {

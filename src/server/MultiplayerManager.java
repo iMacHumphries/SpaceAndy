@@ -6,24 +6,26 @@ import java.util.Queue;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 
-import constants.Constants;
 import entities.EntityManager;
 import entities.Laser;
 import entities.Player;
 import entities.Player.PlayerListener;
 import entities.PlayerBot;
 import server.packets.*;
-
+import util.ChatBox;
 
 public class MultiplayerManager implements ClientListener, PlayerListener {
 	private Client client;
 	private EntityManager entityManager;
 	private Queue<Packet> packetQueue;
+	private Player player;
+	private ChatBox chatBox;
 
-	public MultiplayerManager(EntityManager entityManager) {
+	public MultiplayerManager(EntityManager entityManager, ChatBox box, String serverIp) {
 		this.entityManager = entityManager;
+		this.chatBox = box;
 		packetQueue = new LinkedList<Packet>();
-		client = new Client(this, Constants.SERVER_IP);
+		client = new Client(this, serverIp);
 		client.start();
 	}
 	
@@ -47,6 +49,12 @@ public class MultiplayerManager implements ClientListener, PlayerListener {
 				entityManager.addEntity(bot);
 				break;
 			case MOVE:
+				Packet02Move movePacket = (Packet02Move)packet;
+				entityManager.movePlayerBot(
+						new PlayerBot(movePacket.getUsername()),
+						movePacket.getX(),
+						movePacket.getY(),
+						movePacket.getRotZ());
 				break;
 			case SHOOT:
 				Packet03Shoot shootPacket = (Packet03Shoot) packet;
@@ -54,12 +62,15 @@ public class MultiplayerManager implements ClientListener, PlayerListener {
 				break;
 			case KILL:
 				Packet04Kill killPacket = (Packet04Kill) packet;
-				//entityManager.removePlayerBot(new PlayerBot(killPacket.getUsername()));
+				entityManager.removePlayerBot(new PlayerBot(killPacket.getUsername()));
+				if (killPacket.getUsername().equals(player.getName()))
+					player.setShouldRemove(true);
 				break;
-			default:
+			case CHAT:
+				Packet05Chat chatPacket = (Packet05Chat) packet;
+				chatBox.addMessageFromPlayer(chatPacket.getUsername(), chatPacket.getMessage());
 				break;
-			}
-			
+			}	
 		}
 	}
 	
@@ -72,6 +83,7 @@ public class MultiplayerManager implements ClientListener, PlayerListener {
 	}
 
 	public void login(Player player) {
+		this.player = player;
 		this.sendPacketToServer(new Packet01Login(player.getName(), (int)player.getX(), (int)player.getY(), (int)player.getRotz()));
 	}
 
@@ -87,6 +99,10 @@ public class MultiplayerManager implements ClientListener, PlayerListener {
 		this.sendPacketToServer(new Packet04Kill(username));
 	}
 	
+	public void sendMessage(Player player, String msg) {
+		this.sendPacketToServer(new Packet05Chat(player.getName(), msg));
+	}
+	
 	private void sendPacketToServer(Packet packet) {
 		client.sendData(packet.getData());
 	}
@@ -95,35 +111,9 @@ public class MultiplayerManager implements ClientListener, PlayerListener {
 	public void playerDidMove(Player player) {
 		this.sendPacketToServer(new Packet02Move(player.getName(), (int)player.getX(), (int)player.getY(), (int)player.getRotz()));
 	}
-
-	@Override
-	public void clientDidReceiveDisconnectPacket(Packet00Disconnect disconnectPacket) {
-		packetQueue.add(disconnectPacket);
-	}
 	
 	@Override
-	public void clientDidReceiveLoginPacket(Packet01Login loginPacket) {
-		packetQueue.add(loginPacket);
+	public void clientDidReceivePacket(Packet packet) {
+		packetQueue.add(packet);
 	}
-
-	@Override
-	public void clientDidReceiveMovePacket(Packet02Move movePacket) {
-		entityManager.movePlayerBot(
-				new PlayerBot(movePacket.getUsername()),
-				movePacket.getX(),
-				movePacket.getY(),
-				movePacket.getRotZ());
-	}
-
-	@Override
-	public void clientDidReceiveShootPacket(Packet03Shoot shootPacket) {
-		packetQueue.add(shootPacket);
-	}
-
-	@Override
-	public void clientDidReceiveKillPacket(Packet04Kill killPacket) {
-		packetQueue.add(killPacket);
-	}
-	
-
 }

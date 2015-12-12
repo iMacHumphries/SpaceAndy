@@ -15,6 +15,7 @@ public class Client extends Thread {
 	private DatagramSocket socket;
 
 	private ClientListener delegate;
+
 	public Client(ClientListener delegate, String ip) {
 		this.delegate = delegate;
 		try {
@@ -27,7 +28,6 @@ public class Client extends Thread {
 		} catch (SocketException e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	public void run() {
@@ -45,35 +45,35 @@ public class Client extends Thread {
 
 	private void parsePacket(byte[] data, InetAddress ip, int port) {
 		String msgFromServer = new String(data).trim();
-		PacketType type = Packet.findPacket(msgFromServer.substring(0,2));
+		PacketType type = Packet.findPacket(msgFromServer.substring(0, 2));
 		switch (type) {
 		case INVALID:
+			System.out.println("Invalid packet type on client.");
 			break;
 		case LOGIN:
-			Packet01Login loginPacket = new Packet01Login(data);
-			System.out.println("got a login from " + loginPacket.getUsername());
-			delegate.clientDidReceiveLoginPacket(loginPacket);
+			delegate.clientDidReceivePacket(new Packet01Login(data));
 			break;
 		case DISCONNECT:
-			delegate.clientDidReceiveDisconnectPacket(new Packet00Disconnect(data));
+			delegate.clientDidReceivePacket(new Packet00Disconnect(data));
 			break;
 		case MOVE:
-			delegate.clientDidReceiveMovePacket(new Packet02Move(data));
+			delegate.clientDidReceivePacket(new Packet02Move(data));
 			break;
 		case SHOOT:
-			delegate.clientDidReceiveShootPacket(new Packet03Shoot(data));
+			delegate.clientDidReceivePacket(new Packet03Shoot(data));
+			break;
 		case KILL:
-			delegate.clientDidReceiveKillPacket(new Packet04Kill(data));
+			delegate.clientDidReceivePacket(new Packet04Kill(data));
 			break;
-		default:
+		case CHAT:
+			delegate.clientDidReceivePacket(new Packet05Chat(data));
 			break;
-		
 		}
-
 	}
 
 	public void sendData(byte[] data) {
-		DatagramPacket packet = new DatagramPacket(data, data.length, hostIPAddress, Constants.PORT_NUMBER);
+		DatagramPacket packet = new DatagramPacket(data, data.length,
+				hostIPAddress, Constants.PORT_NUMBER);
 		try {
 			socket.send(packet);
 		} catch (IOException e) {

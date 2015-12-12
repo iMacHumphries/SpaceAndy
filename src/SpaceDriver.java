@@ -1,3 +1,5 @@
+import game.SpaceGameController;
+
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.SlickException;
 
@@ -13,7 +15,7 @@ public class SpaceDriver {
 
 	public static void main(String[] args) throws SlickException {
 		AppGameContainer container = null;
-		container = new AppGameContainer(new SpaceGame());
+		container = new AppGameContainer(new SpaceGameController());
 		container.setDisplayMode(Constants.SCREEN_WIDTH, Constants.SCREEN_HEIGHT, false);
 		container.setShowFPS(Constants.SHOW_FPS);
 		container.setVSync(Constants.VSYNC_ENABLED);
