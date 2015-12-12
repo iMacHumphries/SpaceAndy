@@ -50,11 +50,11 @@ public class Client extends Thread {
 		case INVALID:
 			System.out.println("Invalid packet type on client.");
 			break;
-		case LOGIN:
-			delegate.clientDidReceivePacket(new Packet01Login(data));
-			break;
 		case DISCONNECT:
 			delegate.clientDidReceivePacket(new Packet00Disconnect(data));
+			break;
+		case LOGIN:
+			delegate.clientDidReceivePacket(new Packet01Login(data));
 			break;
 		case MOVE:
 			delegate.clientDidReceivePacket(new Packet02Move(data));
@@ -67,6 +67,9 @@ public class Client extends Thread {
 			break;
 		case CHAT:
 			delegate.clientDidReceivePacket(new Packet05Chat(data));
+			break;
+		case KICK:
+			delegate.clientDidReceivePacket(new Packet06Kick(data));
 			break;
 		}
 	}

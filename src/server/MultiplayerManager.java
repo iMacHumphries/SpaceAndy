@@ -5,7 +5,9 @@ import java.util.Queue;
 
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
+import org.newdawn.slick.state.StateBasedGame;
 
+import constants.Constants;
 import entities.EntityManager;
 import entities.Laser;
 import entities.Player;
@@ -29,7 +31,7 @@ public class MultiplayerManager implements ClientListener, PlayerListener {
 		client.start();
 	}
 	
-	public void update(GameContainer gc, int delta) throws SlickException {
+	public void update(GameContainer gc, StateBasedGame sbg, int delta) throws SlickException {
 		if (hasPackets()) {
 			Packet packet = popPacket();
 			
@@ -63,12 +65,18 @@ public class MultiplayerManager implements ClientListener, PlayerListener {
 			case KILL:
 				Packet04Kill killPacket = (Packet04Kill) packet;
 				entityManager.removePlayerBot(new PlayerBot(killPacket.getUsername()));
-				if (killPacket.getUsername().equals(player.getName()))
+				if (killPacket.getUsername().equalsIgnoreCase(player.getName()))
 					player.setShouldRemove(true);
 				break;
 			case CHAT:
 				Packet05Chat chatPacket = (Packet05Chat) packet;
 				chatBox.addMessageFromPlayer(chatPacket.getUsername(), chatPacket.getMessage());
+				break;
+			case KICK:
+				Packet06Kick kickPacket = (Packet06Kick) packet;
+				if (kickPacket.getUsername().equalsIgnoreCase(player.getName())) {
+					sbg.enterState(Constants.SERVER_MENU_STATE);
+				}
 				break;
 			}	
 		}

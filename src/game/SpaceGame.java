@@ -83,7 +83,7 @@ public class SpaceGame extends BasicGameState {
 	public void update(GameContainer gc, StateBasedGame game, int delta)
 			throws SlickException {
 		entityManager.update(gc, delta);
-		multiplayerManager.update(gc, delta);
+		multiplayerManager.update(gc, game, delta);
 
 		for (Laser l : entityManager.getLasers()) {
 			if (!l.getUsername().equals(player.getName())

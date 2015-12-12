@@ -26,11 +26,13 @@ public class ServerMenu extends BasicGameState implements ActionListener, LocalS
 	private TextField hostTextField;
 	private Button joinBt;
 	private StateBasedGame sbg;
+	private GameContainer gc;
 	
 	@Override
 	public void init(GameContainer gc, StateBasedGame game)
 			throws SlickException {
 		this.sbg = game;
+		this.gc = gc;
 		hostTextField = new TextField(gc, new TrueTypeFont (new Font("Verdana", Font.BOLD, 30), false), gc.getWidth()/2 - 250, gc.getHeight()/2 - 25, 500, 50);
 		hostTextField.setText("Host address...");
 		hostTextField.setCursorPos("Host address...".length());
@@ -68,8 +70,13 @@ public class ServerMenu extends BasicGameState implements ActionListener, LocalS
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == joinBt) {
 			if (hostTextField.getText() == null || hostTextField.getText().length() < "0.0.0.0".length()) return;
-			
-			((SpaceGame)sbg.getState(Constants.SPACE_GAME_STATE)).init(hostTextField.getText());
+			SpaceGame game = (SpaceGame)sbg.getState(Constants.SPACE_GAME_STATE);
+			try {
+				game.init(gc, sbg);
+			} catch (SlickException e1) {
+				e1.printStackTrace();
+			}
+			game.init(hostTextField.getText());
 			sbg.enterState(Constants.SPACE_GAME_STATE);
 		}
 			

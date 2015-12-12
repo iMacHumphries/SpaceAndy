@@ -7,7 +7,8 @@ public enum PacketType {
 	MOVE(02),
 	SHOOT(03),
 	KILL(04),
-	CHAT(05);
+	CHAT(05),
+	KICK(06);
 	
 	private int packetID;
 	
