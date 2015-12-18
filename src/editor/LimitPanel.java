@@ -1,4 +1,4 @@
-package org.newdawn.slick.tools.peditor;
+package editor;
 
 import org.newdawn.slick.particles.ConfigurableEmitter;
 

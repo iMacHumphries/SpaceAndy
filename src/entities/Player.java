@@ -1,11 +1,19 @@
 package entities;
 
+import java.io.File;
+import java.io.IOException;
+
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
+import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.Sound;
+import org.newdawn.slick.particles.ConfigurableEmitter;
+import org.newdawn.slick.particles.ParticleEmitter;
+import org.newdawn.slick.particles.ParticleIO;
+import org.newdawn.slick.particles.ParticleSystem;
 
 public class Player extends Entity {
 
@@ -14,6 +22,7 @@ public class Player extends Entity {
 	private float maxTurnSpeed;
 	private float currentTurnSpeed;
 	private String name;
+	private ParticleSystem system;
 	
 	private PlayerListener delegate;
 
@@ -28,9 +37,19 @@ public class Player extends Entity {
 		maxTurnSpeed = 0.25f;
 		currentSpeed = 0;
 		currentTurnSpeed = 0;
-		setImage("apple.png");
+		setImage("blueShip.png");
 		x = 500;
 		y = 50;
+		
+		try {
+			system = ParticleIO.loadConfiguredSystem("res/particle-flare.xml");
+		
+			//flare.setPosition(x, y);
+			//system.addEmitter(flare);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+		
 	}
 
 	public Laser shoot() {
@@ -40,6 +59,8 @@ public class Player extends Entity {
 	@Override
 	public void update(GameContainer gc, int delta) {
 
+		system.update(delta);
+		
 		float distance = currentSpeed * delta;
 		dirX = (float) Math.cos(Math.toRadians(rotz));
 		dirY = (float) Math.sin(Math.toRadians(rotz));
@@ -94,12 +115,15 @@ public class Player extends Entity {
 
 		if (this.shouldRemove)
 			return;
-
+		
 		image.setCenterOfRotation(width / 2, height / 2);
 		image.setRotation(rotz + 90);
 
 		image.draw(x, y, scale);
 		g.drawString(name, x - width / 2, y - height);
+		
+		//system.render(x,y);
+		
 	}
 
 	public String getName() {

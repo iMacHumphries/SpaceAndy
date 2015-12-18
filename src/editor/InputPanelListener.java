@@ -1,4 +1,4 @@
-package org.newdawn.slick.tools.peditor;
+package editor;
 
 /**
  * A listener to be notified of changes to the editor specific control panels

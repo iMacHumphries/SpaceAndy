@@ -1,4 +1,4 @@
-package org.newdawn.slick.tools.peditor;
+package editor;
 
 import java.awt.Component;
 import java.awt.event.ActionEvent;

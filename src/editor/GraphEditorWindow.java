@@ -1,4 +1,4 @@
-package org.newdawn.slick.tools.peditor;
+package editor;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -15,6 +15,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.NumberFormat;
@@ -409,10 +410,11 @@ public class GraphEditorWindow extends JPanel {
 		private BufferedImage loadBackgroundImage() {
 			InputStream in = ParticleEditor.class.getClassLoader()
 					.getResourceAsStream(
-							"org/newdawn/slick/tools/peditor/data/charlie.png");
+							"res/space.png");
+			
 			BufferedImage backgroundImage = null;
 			try {
-				backgroundImage = ImageIO.read(in);
+				backgroundImage = ImageIO.read(new File("res/space.png"));
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

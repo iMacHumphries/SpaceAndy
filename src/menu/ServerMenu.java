@@ -24,6 +24,7 @@ import constants.Constants;
 
 public class ServerMenu extends BasicGameState implements ActionListener, LocalServerListener {
 	private TextField hostTextField;
+	private TextField nameField;
 	private Button joinBt;
 	private StateBasedGame sbg;
 	private GameContainer gc;
@@ -37,6 +38,12 @@ public class ServerMenu extends BasicGameState implements ActionListener, LocalS
 		hostTextField.setText("Host address...");
 		hostTextField.setCursorPos("Host address...".length());
 		hostTextField.setBorderColor(Color.white);
+		
+		nameField = new TextField(gc, new TrueTypeFont (new Font("Verdana", Font.BOLD, 30), false), gc.getWidth()/2 - 250, gc.getHeight()/2 - 25- 50, 500, 50);
+		nameField.setText("Username");
+		nameField.setCursorPos(nameField.getText().length());
+		nameField.setBorderColor(Color.white);
+		
 		joinBt = new Button(this, "Join");
 		joinBt.setWidth(40);
 		joinBt.setHeight(20);
@@ -51,6 +58,7 @@ public class ServerMenu extends BasicGameState implements ActionListener, LocalS
 	@Override
 	public void render(GameContainer gc, StateBasedGame game, Graphics g)
 			throws SlickException {
+		nameField.render(gc, g);
 		hostTextField.render(gc, g);
 		joinBt.render(gc, g);
 	}
@@ -76,7 +84,7 @@ public class ServerMenu extends BasicGameState implements ActionListener, LocalS
 			} catch (SlickException e1) {
 				e1.printStackTrace();
 			}
-			game.init(hostTextField.getText());
+			game.init(hostTextField.getText(), nameField.getText());
 			sbg.enterState(Constants.SPACE_GAME_STATE);
 		}
 			

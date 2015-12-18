@@ -15,6 +15,7 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.gui.TextField;
 import org.newdawn.slick.opengl.Texture;
+import org.newdawn.slick.particles.ParticleSystem;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.BufferedImageUtil;
@@ -40,7 +41,8 @@ public class SpaceGame extends BasicGameState {
 	private ChatBox chatBox;
 	private TextField chatField;
 	private boolean isTyping;
-
+	
+	
 	/**
 	 * Constructor
 	 */
@@ -73,10 +75,10 @@ public class SpaceGame extends BasicGameState {
 		background = loadImage("res/space.png");
 	}
 
-	public void init(String serverIp) {
+	public void init(String serverIp, String username) {
 		entityManager = new EntityManager();
 		multiplayerManager = new MultiplayerManager(entityManager,chatBox, serverIp);
-		player = new Player(multiplayerManager, "SonOfBoo");
+		player = new Player(multiplayerManager, username);
 		multiplayerManager.login(player);
 
 	}

@@ -1,4 +1,4 @@
-package org.newdawn.slick.tools.peditor;
+package editor;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -305,8 +305,8 @@ public class ParticleEditor extends JFrame {
 		additive.setSelected(true);
 		
 		setContentPane(panel);
-		setSize(800,600);
-		setResizable(false);
+		setSize(1000,800);
+		setResizable(true);
 		setVisible(true);
 
 		InputListener listener = new InputAdapter() {
@@ -340,6 +340,7 @@ public class ParticleEditor extends JFrame {
 		} catch (SlickException e1) {
 			Log.error(e1);
 		}
+		
 	}
 	
 	/**
@@ -668,6 +669,7 @@ public class ParticleEditor extends JFrame {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		
 			new ParticleEditor();
+			
 		} catch (Exception e) {
 			Log.error(e);
 		}
