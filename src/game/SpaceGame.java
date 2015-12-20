@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.Image;
@@ -15,7 +16,6 @@ import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
 import org.newdawn.slick.gui.TextField;
 import org.newdawn.slick.opengl.Texture;
-import org.newdawn.slick.particles.ParticleSystem;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
 import org.newdawn.slick.util.BufferedImageUtil;
@@ -41,7 +41,6 @@ public class SpaceGame extends BasicGameState {
 	private ChatBox chatBox;
 	private TextField chatField;
 	private boolean isTyping;
-	
 	
 	/**
 	 * Constructor
@@ -72,6 +71,7 @@ public class SpaceGame extends BasicGameState {
 		chatField = new TextField(gc, new TrueTypeFont(new Font("Verdana",
 				Font.BOLD, 15), false), 0, gc.getHeight() - 20, 500, 20);
 		chatField.setCursorVisible(true);
+		chatField.setFocus(false);
 		background = loadImage("res/space.png");
 	}
 
@@ -80,7 +80,7 @@ public class SpaceGame extends BasicGameState {
 		multiplayerManager = new MultiplayerManager(entityManager,chatBox, serverIp);
 		player = new Player(multiplayerManager, username);
 		multiplayerManager.login(player);
-
+		player.setColor(Color.red);
 	}
 
 	@Override
@@ -92,6 +92,7 @@ public class SpaceGame extends BasicGameState {
 		for (Laser l : entityManager.getLasers()) {
 			if (!l.getUsername().equals(player.getName())
 					&& l.intersects(player)) {
+				entityManager.addEntity(new Explosion(l.getX(), l.getY()));
 				l.setShouldRemove(true);
 				multiplayerManager.kill(player.getName());
 			}
@@ -100,6 +101,7 @@ public class SpaceGame extends BasicGameState {
 		for (PlayerBot p : entityManager.getPlayers()) {
 			for (Laser l : entityManager.getLasers()) {
 				if (l.intersects(p) && !l.getUsername().equals(p.getName())) {
+					entityManager.addEntity(new Explosion(l.getX(), l.getY()));			
 					l.setShouldRemove(true);
 					multiplayerManager.kill(p.getName());
 				}
@@ -130,7 +132,8 @@ public class SpaceGame extends BasicGameState {
 
 		if (input.isKeyPressed(Input.KEY_SPACE) || input.isMousePressed(0)) {
 			Laser laser = player.shoot();
-			multiplayerManager.shootLaser(laser);
+			if (laser != null)
+				multiplayerManager.shootLaser(laser);
 		}
 
 	}

@@ -10,7 +10,7 @@ public class Constants {
 	
 	private Constants(){};
 	
-	public static final String VERSION = "Alpha Version 0.1";
+	public static final String VERSION = "Alpha Version 0.2";
 	
 	public static final int SCREEN_HEIGHT = 800;
 	public static final int SCREEN_WIDTH = 1300;

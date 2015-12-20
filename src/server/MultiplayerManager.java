@@ -5,6 +5,7 @@ import java.util.Queue;
 
 import menu.KickedScreen;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.state.StateBasedGame;
@@ -62,9 +63,9 @@ public class MultiplayerManager implements ClientListener, PlayerListener {
 						movePacket.getRotZ());
 				break;
 			case SHOOT:
-				Packet03Shoot shootPacket = (Packet03Shoot) packet;
+				Packet03Shoot pack = (Packet03Shoot) packet;
 				AudioManager.playClipRandomPitch("shot1.wav");
-				entityManager.addEntity(new Laser(shootPacket.getUsername(), shootPacket.getDirX(), shootPacket.getDirY(), shootPacket.getX(), shootPacket.getY(), shootPacket.getRotZ()));
+				entityManager.addEntity(new Laser(pack.getUsername(), Color.red, pack.getDirX(), pack.getDirY(), pack.getX(), pack.getY(), pack.getRotZ()));
 				break;
 			case KILL:
 				AudioManager.playClip("boom.wav");

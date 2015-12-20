@@ -14,7 +14,7 @@ public class PlayerBot extends Entity {
 	public void update(GameContainer gc, int delta) {
 		// No input!
 	}
-
+	
 	public String getName() {
 		return name;
 	}

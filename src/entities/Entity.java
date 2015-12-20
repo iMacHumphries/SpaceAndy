@@ -1,5 +1,6 @@
 package entities;
 
+import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Image;
 import org.newdawn.slick.SlickException;
@@ -22,6 +23,7 @@ public abstract class Entity {
 	protected float height;
 	protected float scale;
 	protected Image image;
+	protected Color color;
 
 	protected boolean shouldRemove;
 
@@ -61,7 +63,6 @@ public abstract class Entity {
 
 			e.printStackTrace();
 		}
-
 	}
 
 	public boolean shouldRemove() {
@@ -132,4 +133,11 @@ public abstract class Entity {
 		this.scale = scale;
 	}
 
+	public void setColor(Color color) {
+		this.color = color;
+	}
+	
+	public Color getColor() {
+		return color;
+	}	
 }

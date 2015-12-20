@@ -1,17 +1,12 @@
 package entities;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.newdawn.slick.Color;
 import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
-import org.newdawn.slick.Image;
 import org.newdawn.slick.Input;
 import org.newdawn.slick.SlickException;
-import org.newdawn.slick.Sound;
-import org.newdawn.slick.particles.ConfigurableEmitter;
-import org.newdawn.slick.particles.ParticleEmitter;
 import org.newdawn.slick.particles.ParticleIO;
 import org.newdawn.slick.particles.ParticleSystem;
 
@@ -43,7 +38,6 @@ public class Player extends Entity {
 		
 		try {
 			system = ParticleIO.loadConfiguredSystem("res/particle-flare.xml");
-		
 			//flare.setPosition(x, y);
 			//system.addEmitter(flare);
 		} catch (IOException e) {
@@ -53,7 +47,9 @@ public class Player extends Entity {
 	}
 
 	public Laser shoot() {
-		return new Laser(name, dirX, dirY, x + width / 2, y + height / 2, rotz);
+		if (this.shouldRemove)
+			return null;
+		return new Laser(name, color, dirX, dirY, x + width / 2, y + height / 2, rotz);
 	}
 
 	@Override
@@ -90,6 +86,10 @@ public class Player extends Entity {
 	}
 
 	public void checkInput(Input input, boolean isTyping) {
+		
+		if (this.shouldRemove)
+			return;
+		
 		currentTurnSpeed = 0;
 		if (!isTyping
 				&& (input.isKeyDown(Input.KEY_W) || input
@@ -113,17 +113,36 @@ public class Player extends Entity {
 
 	public void render(GameContainer gc, Graphics g) throws SlickException {
 
-		if (this.shouldRemove)
+		if (this.shouldRemove) {
+			g.drawString("You died here", gc.getWidth()/2 - "You died here".length()*6, gc.getHeight()/2);
 			return;
+		}
+		
+		Color old = g.getColor();
+		
+		if (color != null) {
+			g.setColor(color);
+		}
+		
+		float r = rotz + 90;
+		float centerX = x + width / 2;
+		float centerY =  y + height / 2;
+		
+		if (currentSpeed > 0) {
+			g.rotate(centerX, centerY, r);
+			system.getEmitter(0).getImage().setImageColor(color.r, color.g, color.b, color.a);
+			system.render(centerX,centerY);
+			g.rotate(centerX, centerY, -r);
+		}
 		
 		image.setCenterOfRotation(width / 2, height / 2);
-		image.setRotation(rotz + 90);
+		image.setRotation(r);
 
-		image.draw(x, y, scale);
-		g.drawString(name, x - width / 2, y - height);
+		image.draw(x, y, scale, color);
 		
-		//system.render(x,y);
+		g.setColor(old);
 		
+		g.drawString(name, centerX - name.length() *6, y - height/2);
 	}
 
 	public String getName() {

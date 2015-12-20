@@ -51,10 +51,16 @@ public class EntityManager {
 
 	public void render(GameContainer gc, Graphics g) throws SlickException {
 		for (Entity e : entities) {
+			
+			if (e instanceof Explosion) {
+				((Explosion) e).render(gc, g);
+				return;
+			}
+			
 			Image image = e.getImage();
 			image.setCenterOfRotation(e.getWidth() / 2, e.getHeight() / 2);
 			image.setRotation(e.getRotz() + 90);
-			image.draw(e.getX(), e.getY(), e.getScale(), Color.green);
+			image.draw(e.getX(), e.getY(), e.getScale(), e.getColor());
 
 			if (e instanceof PlayerBot) {
 				g.drawString(((PlayerBot) e).getName(), e.getX() - e.getWidth() / 2, e.getY() - e.getHeight() / 2);
