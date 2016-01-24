@@ -80,7 +80,7 @@ public class SpaceGame extends BasicGameState {
 		multiplayerManager = new MultiplayerManager(entityManager,chatBox, serverIp);
 		player = new Player(multiplayerManager, username);
 		multiplayerManager.login(player);
-		player.setColor(Color.red);
+		//player.setColor(Color.green);
 	}
 
 	@Override

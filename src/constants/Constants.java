@@ -27,4 +27,9 @@ public class Constants {
 	public static final int KICKED_GAME_STATE = 2;
 	
 	
+	public static final boolean DEV_MODE = true;
+	public static final String DEFAULT_USERNAME = "Andy";
+	public static final String DEFAULT_IP = "192.168.0.5";
+	
+	
 }

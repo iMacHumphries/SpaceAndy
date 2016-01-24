@@ -130,7 +130,8 @@ public class Player extends Entity {
 		
 		if (currentSpeed > 0) {
 			g.rotate(centerX, centerY, r);
-			system.getEmitter(0).getImage().setImageColor(color.r, color.g, color.b, color.a);
+			if (color != null)
+				system.getEmitter(0).getImage().setImageColor(color.r, color.g, color.b, color.a);
 			system.render(centerX,centerY);
 			g.rotate(centerX, centerY, -r);
 		}
@@ -138,7 +139,10 @@ public class Player extends Entity {
 		image.setCenterOfRotation(width / 2, height / 2);
 		image.setRotation(r);
 
-		image.draw(x, y, scale, color);
+		if (color != null)
+			image.draw(x, y, scale, color);
+		else 
+			image.draw(x, y, scale);
 		
 		g.setColor(old);
 		

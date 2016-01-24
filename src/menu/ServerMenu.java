@@ -13,8 +13,6 @@ import org.newdawn.slick.GameContainer;
 import org.newdawn.slick.Graphics;
 import org.newdawn.slick.SlickException;
 import org.newdawn.slick.TrueTypeFont;
-import org.newdawn.slick.gui.AbstractComponent;
-import org.newdawn.slick.gui.ComponentListener;
 import org.newdawn.slick.gui.TextField;
 import org.newdawn.slick.state.BasicGameState;
 import org.newdawn.slick.state.StateBasedGame;
@@ -46,12 +44,17 @@ public class ServerMenu extends BasicGameState implements ActionListener, LocalS
 		nameField.setCursorPos(nameField.getText().length());
 		nameField.setBorderColor(Color.white);
 		
-		
 		joinBt = new Button(this, "Join");
 		joinBt.setWidth(40);
 		joinBt.setHeight(20);
 		joinBt.setX(hostTextField.getX() + hostTextField.getWidth());
 		joinBt.setY(hostTextField.getY() + hostTextField.getHeight()/2);
+		
+		
+		if (Constants.DEV_MODE) {
+			nameField.setText(Constants.DEFAULT_USERNAME);
+			hostTextField.setText(Constants.DEFAULT_IP);
+		}
 		
 		LocalServerFinder localFinder = new LocalServerFinder(this);
 		Thread thread = new Thread(localFinder);
