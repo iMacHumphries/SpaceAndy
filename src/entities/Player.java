@@ -47,9 +47,10 @@ public class Player extends Entity {
 	}
 
 	public Laser shoot() {
-		if (this.shouldRemove)
+		if (this.shouldRemove) {
 			return null;
-		return new Laser(name, color, dirX, dirY, x + width / 2, y + height / 2, rotz);
+		}
+		return new Laser(name, Color.white, dirX, dirY, x + width / 2, y + height / 2, rotz);
 	}
 
 	@Override
